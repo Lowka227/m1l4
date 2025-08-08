@@ -35,6 +35,7 @@ class Pokemon:
         else:
             return "Pikachu"
         
+    # Метод для получения способностей покемона через API    
     def get_abil(self):
         url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
         response = requests.get(url)
