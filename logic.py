@@ -21,7 +21,7 @@ class Pokemon:
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
-            return (data['sprites']['front_default'])
+            return (data['sprites']['other']['home']['front_default'])
         else:
             return "Pikachu"
     
