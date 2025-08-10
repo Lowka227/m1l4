@@ -12,7 +12,8 @@ class Pokemon:
         self.img = self.get_img()
         self.name = self.get_name()
         self.abil = self.get_abil()
-
+        self.hp = randint(1,100)
+        self.power = randint(1,100)
         Pokemon.pokemons[pokemon_trainer] = self
 
     # Метод для получения картинки покемона через API
@@ -44,10 +45,21 @@ class Pokemon:
             return (data['abilities'][0]['ability']['name'])
         else:
             return "Pikachu"
-        
+    def attack(self, enemy):
+        if isinstance(enemy, Wizard): # Проверка на то, что enemy является типом данных Wizard (является экземпляром класса Волшебник)
+            chance = randint(1,5)
+            if chance == 1:
+                return "Покемон-волшебник применил щит в сражении"
+        if enemy.hp > self.power:
+            enemy.hp -= self.power
+            return f"Сражение @{self.pokemon_trainer} с @{enemy.pokemon_trainer}"
+        else:
+            enemy.hp = 0
+            return f"Победа @{self.pokemon_trainer} над @{enemy.pokemon_trainer}! "
+
     # Метод класса для получения информации
     def info(self):
-        return f"Имя твоего покемона: {self.name}"
+        return f"Имя твоего покемона: {self.name}.\nЗдоровье: {self.hp}\nСила: {self.power}"
 
     # Метод класса для получения способностей покемона
     def show_abil(self):
@@ -56,3 +68,28 @@ class Pokemon:
     # Метод класса для получения картинки покемона
     def show_img(self):
         return self.img
+
+class Wizard(Pokemon):
+    def __init__(self, pokemon_trainer):
+        super().__init__(pokemon_trainer)
+    
+    def info(self):
+        return super().info() + f"\nУ тебя покемон-волшебник" 
+    
+
+    
+class Fighter(Pokemon):
+    def __init__(self, pokemon_trainer):
+        super().__init__(pokemon_trainer)
+    
+    def info(self):
+        return super().info() + f"\nУ тебя покемон-боец" 
+
+    def attack(self, enemy):
+        super().attack(enemy)
+        super_power = randint(5,15)
+        self.power += super_power
+        result = super().attack(enemy)
+        self.power -= super_power
+        return result + f"\nБоец применил супер-атаку силой:{super_power} "
+        
