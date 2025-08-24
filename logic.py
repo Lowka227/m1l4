@@ -1,6 +1,6 @@
 from random import randint
 import requests
-
+from datetime import datetime, timedelta
 class Pokemon:
     pokemons = {}
     # Инициализация объекта (конструктор)
@@ -14,6 +14,7 @@ class Pokemon:
         self.abil = self.get_abil()
         self.hp = randint(1,100)
         self.power = randint(1,100)
+        self.last_feed_time = datetime.now() - timedelta(hours=20)
         Pokemon.pokemons[pokemon_trainer] = self
 
     # Метод для получения картинки покемона через API
@@ -56,6 +57,16 @@ class Pokemon:
         else:
             enemy.hp = 0
             return f"Победа @{self.pokemon_trainer} над @{enemy.pokemon_trainer}! "
+        
+    def feed(self, feed_interval = 20, hp_increase = 10 ):
+        current_time = datetime.now()  
+        delta_time = timedelta(hours=feed_interval)  
+        if (current_time - self.last_feed_time) > delta_time:   
+            self.hp += hp_increase
+            self.last_feed_time = current_time
+            return f"Здоровье покемона увеличено. Текущее здоровье: {self.hp}"
+        else:
+            return f"Следующее время кормления покемона: {current_time+delta_time}"
 
     # Метод класса для получения информации
     def info(self):
@@ -73,14 +84,35 @@ class Wizard(Pokemon):
     def __init__(self, pokemon_trainer):
         super().__init__(pokemon_trainer)
     
+    def feed(self, feed_interval = 20, hp_increase = 20 ):
+        current_time = datetime.now()  
+        delta_time = timedelta(hours=feed_interval)  
+        if (current_time - self.last_feed_time) > delta_time:   
+            self.hp += hp_increase
+            self.last_feed_time = current_time
+            return f"Здоровье покемона увеличено. Текущее здоровье: {self.hp}"
+        else:
+            return f"Следующее время кормления покемона: {current_time+delta_time}"
+    
     def info(self):
         return super().info() + f"\nУ тебя покемон-волшебник" 
+    
     
 
     
 class Fighter(Pokemon):
     def __init__(self, pokemon_trainer):
         super().__init__(pokemon_trainer)
+
+    def feed(self, feed_interval = 10, hp_increase = 10 ):
+        current_time = datetime.now()  
+        delta_time = timedelta(hours=feed_interval)  
+        if (current_time - self.last_feed_time) > delta_time:   
+            self.hp += hp_increase
+            self.last_feed_time = current_time
+            return f"Здоровье покемона увеличено. Текущее здоровье: {self.hp}"
+        else:
+            return f"Следующее время кормления покемона: {current_time+delta_time}"
     
     def info(self):
         return super().info() + f"\nУ тебя покемон-боец" 
